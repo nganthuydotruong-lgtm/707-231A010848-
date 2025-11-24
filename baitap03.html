@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài 3: Countdown Timer</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html">Trang chủ</a>
+        <a href="baitap01.html">Bài 1: Sản phẩm</a>
+        <a href="baitap02.html">Bài 2: Form</a>
+        <a href="baitap03.html">Bài 3: Timer</a>
+    </nav>
+
+    <div class="container">
+        <div class="card-box" style="text-align: center;">
+            <h2>ĐỒNG HỒ ĐẾM NGƯỢC</h2>
+            <p style="color: var(--text-secondary)">Thời gian làm bài còn lại</p>
+            <div id="timer" class="timer-display">10:00</div>
+            <div style="font-size: 0.9em; color: var(--text-secondary); margin-top: 20px;">
+                Hệ thống sẽ cảnh báo khi còn dưới 1 phút.
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Logic riêng cho Bài 3
+        let time = 10 * 60;
+        const el = document.getElementById('timer');
+        
+        const interval = setInterval(() => {
+            const m = Math.floor(time / 60);
+            const s = time % 60;
+            el.textContent = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+
+            if (time < 60) el.classList.add('urgent');
+            
+            if (time <= 0) {
+                clearInterval(interval);
+                el.textContent = "00:00";
+                setTimeout(() => alert("Hết giờ làm bài!"), 100);
+            }
+            time--;
+        }, 1000);
+    </script>
+</body>
+</html>

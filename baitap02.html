@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài 2: Form Register</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html">Trang chủ</a>
+        <a href="baitap01.html">Bài 1: Sản phẩm</a>
+        <a href="baitap02.html">Bài 2: Form</a>
+        <a href="baitap03.html">Bài 3: Timer</a>
+    </nav>
+
+    <div class="container">
+        <div class="card-box" style="max-width: 500px; margin: 0 auto;">
+            <h2 style="text-align: center;">Đăng Ký Tài Khoản</h2>
+            <form id="regForm">
+                <div>
+                    <label style="color: var(--text-secondary)">Họ tên</label>
+                    <input type="text" id="name">
+                </div>
+                <div style="margin-top: 15px;">
+                    <label style="color: var(--text-secondary)">Email</label>
+                    <input type="email" id="email">
+                    <span id="errEmail" style="color: var(--error-color); display: none; font-size: 0.9em;">Email sai định dạng.</span>
+                </div>
+                <div style="margin-top: 15px;">
+                    <label style="color: var(--text-secondary)">Mật khẩu</label>
+                    <input type="password" id="pass">
+                    <span id="errPass" style="color: var(--error-color); display: none; font-size: 0.9em;">Mật khẩu yếu (8 ký tự, hoa, thường, số).</span>
+                </div>
+                <div style="margin-top: 20px;">
+                    <input type="checkbox" id="terms" style="width: auto;"> 
+                    <label for="terms">Đồng ý với điều khoản</label>
+                </div>
+
+                <button type="submit" class="btn-cyber">XÁC NHẬN ĐĂNG KÝ</button>
+                <p id="successMsg" style="color: var(--success-color); text-align: center; display: none; margin-top: 15px; font-weight: bold;">Đăng ký thành công!</p>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Logic riêng cho Bài 2
+        document.getElementById('regForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            const terms = document.getElementById('terms').checked;
+            let valid = true;
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                document.getElementById('errEmail').style.display = 'block'; valid = false;
+            } else document.getElementById('errEmail').style.display = 'none';
+
+            if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(pass)) {
+                document.getElementById('errPass').style.display = 'block'; valid = false;
+            } else document.getElementById('errPass').style.display = 'none';
+
+            if (!terms) { alert("Bạn chưa đồng ý điều khoản!"); valid = false; }
+
+            if (valid) {
+                localStorage.setItem('user_dark', JSON.stringify({email, pass}));
+                document.getElementById('successMsg').style.display = 'block';
+                this.reset();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài 1: Product List</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html">Trang chủ</a>
+        <a href="baitap01.html">Bài 1: Sản phẩm</a>
+        <a href="baitap02.html">Bài 2: Form</a>
+        <a href="baitap03.html">Bài 3: Timer</a>
+    </nav>
+
+    <div class="container">
+        <div class="card-box">
+            <h2 style="text-align: center;">Kho Hàng Công Nghệ</h2>
+            <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm (VD: Laptop)...">
+            <p id="notFound" style="color: var(--error-color); text-align: center; display: none; margin-top: 15px;">Không tìm thấy sản phẩm!</p>
+            <div id="productList" class="product-grid"></div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Logic riêng cho Bài 1
+        const products = [
+            { name: "Gaming Laptop Alienware", price: "45.000.000 đ" },
+            { name: "MacBook Pro M3 Max", price: "60.000.000 đ" },
+            { name: "Bàn phím cơ CyberBoard", price: "3.500.000 đ" },
+            { name: "Chuột Logitech G Pro", price: "2.200.000 đ" },
+            { name: "Màn hình LG OLED", price: "18.000.000 đ" }
+        ];
+
+        const listContainer = document.getElementById('productList');
+        
+        function render(list) {
+            listContainer.innerHTML = "";
+            if (list.length === 0) document.getElementById('notFound').style.display = 'block';
+            else {
+                document.getElementById('notFound').style.display = 'none';
+                listContainer.innerHTML = list.map(p => `
+                    <div class="product-card">
+                        <h3>${p.name}</h3>
+                        <p style="color: var(--success-color); font-weight: bold;">${p.price}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const key = e.target.value.toLowerCase().trim();
+            const filtered = products.filter(p => p.name.toLowerCase().includes(key));
+            render(filtered);
+        });
+        render(products);
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+// js/script.js - Phiên bản đã fix 100%, không còn lỗi null
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ==================== BÀI 1: Danh sách sản phẩm ====================
+    const productListEl = document.getElementById('productList');
+    if (productListEl) {
+        const products = [
+            { name: "Gaming Laptop Alienware", price: "45.000.000 đ" },
+            { name: "MacBook Pro M3 Max", price: "60.000.000 đ" },
+            { name: "Bàn phím cơ CyberBoard", price: "3.500.000 đ" },
+            { name: "Chuột Logitech G Pro", price: "2.200.000 đ" },
+            { name: "Màn hình LG OLED", price: "18.000.000 đ" }
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const notFound = document.getElementById('notFound');
+
+        function render(list) {
+            productListEl.innerHTML = "";
+            if (list.length === 0) {
+                notFound.style.display = 'block';
+            } else {
+                notFound.style.display = 'none';
+                productListEl.innerHTML = list.map(p => `
+                    <div class="product-card">
+                        <h3>${p.name}</h3>
+                        <p style="color: var(--success-color); font-weight: bold;">${p.price}</p>
+                    </div>
+                `).join('');
+            }
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            const key = e.target.value.toLowerCase().trim();
+            const filtered = products.filter(p => p.name.toLowerCase().includes(key));
+            render(filtered);
+        });
+
+        render(products); // hiển thị lần đầu
+    }
+
+    // ==================== BÀI 2: Form đăng ký ====================
+    const regForm = document.getElementById('regForm');
+    if (regForm) {
+        regForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const pass = document.getElementById('pass').value;
+            const terms = document.getElementById('terms').checked;
+
+            const errEmail = document.getElementById('errEmail');
+            const errPass = document.getElementById('errPass');
+            const successMsg = document.getElementById('successMsg');
+
+            let valid = true;
+
+            // Email
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                errEmail.style.display = 'block';
+                valid = false;
+            } else {
+                errEmail.style.display = 'none';
+            }
+
+            // Password
+            if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(pass)) {
+                errPass.style.display = 'block';
+                valid = false;
+            } else {
+                errPass.style.display = 'none';
+            }
+
+            // Điều khoản
+            if (!terms) {
+                alert("Bạn cần đồng ý với điều khoản dịch vụ!");
+                valid = false;
+            }
+
+            if (valid) {
+                localStorage.setItem('user_dark', JSON.stringify({ email, pass }));
+                successMsg.style.display = 'block';
+                regForm.reset();
+                setTimeout(() => successMsg.style.display = 'none', 5000);
+            }
+        });
+    }
+
+    // ==================== BÀI 3: Đồng hồ đếm ngược ====================
+    const timerEl = document.getElementById('timer');
+    if (timerEl) {
+        let time = 10 * 60; // 10 phút
+
+        const tick = () => {
+            const m = String(Math.floor(time / 60)).padStart(2, '0');
+            const s = String(time % 60).padStart(2, '0');
+            timerEl.textContent = `${m}:${s}`;
+
+            if (time < 60) {
+                timerEl.classList.add('urgent');
+            }
+
+            if (time <= 0) {
+                clearInterval(interval);
+                timerEl.textContent = "00:00";
+                timerEl.style.color = 'var(--error-color)';
+                setTimeout(() => alert("Hết giờ làm bài!"), 100);
+                return;
+            }
+            time--;
+        };
+
+        tick(); // gọi lần đầu
+        const interval = setInterval(tick, 1000);
+    }
+});
